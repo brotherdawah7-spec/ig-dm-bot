@@ -1,0 +1,49 @@
+name: DM bot
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"     # GitHub runs this every 5-15 minutes in practice
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "run = handle comments and replies, check = test login and list PDF reels"
+        default: run
+        type: choice
+        options: [run, check]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: dm-bot
+  cancel-in-progress: false
+
+jobs:
+  bot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: bot/requirements.txt
+      - run: pip install -r bot/requirements.txt
+      - name: Run bot
+        env:
+          IG_TOKEN: ${{ secrets.IG_TOKEN }}
+          IG_APP_SECRET: ${{ secrets.IG_APP_SECRET }}
+        run: |
+          if [ "${{ github.event.inputs.mode }}" = "check" ]; then python bot/bot.py --check; else python bot/bot.py; fi
+      - name: Save encrypted state
+        if: always()
+        run: |
+          git config user.name "dm-bot"
+          git config user.email "dm-bot@users.noreply.github.com"
+          mkdir -p state && git add -A state
+          if ! git diff --cached --quiet; then
+            git commit -m "bot state [skip ci]"
+            git pull --rebase --autostash || true
+            git push
+          fi
