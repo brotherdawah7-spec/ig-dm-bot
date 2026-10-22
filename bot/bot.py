@@ -322,5 +322,21 @@ def main() -> None:
     log(f"Done. Tracking {len(st['users'])} people.")
 
 
+def loop(minutes: float, every: float = 180) -> None:
+    """Stay awake and check every few minutes (GitHub only starts scheduled runs now and then)."""
+    end = time.time() + minutes * 60
+    while True:
+        try:
+            main()
+        except Exception as e:  # keep looping; log and try again next round
+            log(f"round failed: {str(e)[:300]}")
+        if time.time() + every > end:
+            break
+        time.sleep(every)
+
+
 if __name__ == "__main__":
-    main()
+    if "--loop" in sys.argv:
+        loop(float(sys.argv[sys.argv.index("--loop") + 1]))
+    else:
+        main()

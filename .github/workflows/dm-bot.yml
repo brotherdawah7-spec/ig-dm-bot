@@ -2,7 +2,7 @@ name: DM bot
 
 on:
   schedule:
-    - cron: "*/5 * * * *"     # GitHub runs this every 5-15 minutes in practice
+    - cron: "*/15 * * * *"    # each run stays awake ~50 min; the next one queues behind it
   workflow_dispatch:
     inputs:
       mode:
@@ -21,9 +21,11 @@ concurrency:
 jobs:
   bot:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -35,7 +37,7 @@ jobs:
           IG_TOKEN: ${{ secrets.IG_TOKEN }}
           IG_APP_SECRET: ${{ secrets.IG_APP_SECRET }}
         run: |
-          if [ "${{ github.event.inputs.mode }}" = "check" ]; then python bot/bot.py --check; else python bot/bot.py; fi
+          if [ "${{ github.event.inputs.mode }}" = "check" ]; then python bot/bot.py --check; else python bot/bot.py --loop 50; fi
       - name: Save encrypted state
         if: always()
         run: |
