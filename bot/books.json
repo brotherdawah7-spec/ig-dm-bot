@@ -6,13 +6,18 @@
   },
   {
     "title": "Reconciling the Divine Decree and Free Will in Islam",
-    "aliases": ["Divine Decree and Free Will"],
+    "aliases": [
+      "Divine Decree and Free Will"
+    ],
     "publisher": "Yaqeen Institute, free paper",
     "url": "https://yaqeeninstitute.org/justin-parrott/reconciling-the-divine-decree-and-free-will-in-islam/"
   },
   {
     "title": "Human Origins: Evolution and the Failures of Naturalism",
-    "aliases": ["Evolution and the Failures of Naturalism", "Human Origins"],
+    "aliases": [
+      "Evolution and the Failures of Naturalism",
+      "Human Origins"
+    ],
     "publisher": "Dr. Nazir Khan, Yaqeen Institute, free paper",
     "url": "https://yaqeeninstitute.org/read/paper/human-origins-part-2-evolution-and-the-failures-of-naturalism"
   },
@@ -20,5 +25,13 @@
     "title": "The Eternal Challenge",
     "publisher": "iERA, free e-book",
     "url": "https://iera.org/downloads/the-eternal-challenge-free-e-book-download/"
+  },
+  {
+    "title": "Is Feminism the Problem? Why Ideological Bandwagons Fail Islam",
+    "aliases": [
+      "Is Feminism the Problem"
+    ],
+    "publisher": "Yaqeen Institute, free paper",
+    "url": "https://yaqeeninstitute.org/read/paper/is-feminism-the-problem-why-ideological-bandwagons-fail-islam"
   }
 ]
