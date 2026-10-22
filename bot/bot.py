@@ -313,8 +313,11 @@ def main() -> None:
         found = campaigns(tok)
         log(f"Logged in as @{st['me_username']}. Active PDF reels: {len(found)}")
         for m, b in found:
-            log(f"  {m['id']} {m['timestamp'][:10]} -> {b['title']}")
-        save_state(st)
+            info = api("GET", m["id"], tok, fields="comments_count,permalink")
+            readable = list(paged(f"{m['id']}/comments", tok, fields="id,text,from,username", limit=50))
+            pdf = [c for c in readable if KEYWORD.search(c.get("text", ""))]
+            log(f"  {info.get('permalink')} -> {b['title']}: Instagram says {info.get('comments_count')} comments, "
+                f"app can read {len(readable)}, with 'pdf': {len(pdf)}")
         return
     budget = [MAX_ACTIONS_PER_RUN]
     try:

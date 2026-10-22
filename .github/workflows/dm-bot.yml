@@ -15,7 +15,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: dm-bot
+  group: dm-bot-${{ github.event.inputs.mode || 'run' }}   # check runs don't wait for the main loop
   cancel-in-progress: false
 
 jobs:
