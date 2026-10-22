@@ -190,7 +190,11 @@ def first_name(u: dict) -> str:
 
 def handle_new_comments(tok: str, me: str, st: dict, budget: list[int]) -> None:
     for media, book in campaigns(tok):
-        for c in paged(f"{media['id']}/comments", tok, fields="id,text,timestamp,from,username", limit=50):
+        comments = list(paged(f"{media['id']}/comments", tok, fields="id,text,timestamp,from,username", limit=50))
+        new = [c for c in comments if c["id"] not in st["comments"]]
+        if new:
+            log(f"reel {media['id']}: {len(comments)} comments, {len(new)} new")
+        for c in comments:
             if budget[0] <= 0:
                 return
             cid = c["id"]
