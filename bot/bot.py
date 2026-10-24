@@ -7,7 +7,7 @@ Follows Meta's messaging rules:
   * the follow check (is_user_follow_business) only after the person has messaged us;
   * at most MAX_REMINDERS "please follow" reminders, then the bot goes quiet.
 
-Which reels: any of your reels whose caption contains 'Comment "PDF"' (any case/quotes)
+Which reels: any of your reels whose caption contains 'Comment "LINK"' or the older 'Comment "PDF"' (any case/quotes)
 and the title of a book from books.json. The book in the caption decides the link.
 
 Secrets: IG_TOKEN, IG_APP_SECRET (same values as the auto-poster).
@@ -37,8 +37,8 @@ STATE_FILE = STATE / "dm.enc"
 TOKEN_FILE = STATE / "token.enc"
 GRAPH = "https://graph.instagram.com/v26.0"
 
-KEYWORD = re.compile(r"\bpdf\b", re.I)
-CAMPAIGN = re.compile(r"comment\s*[\"'“”‘’]?\s*pdf", re.I)
+KEYWORD = re.compile(r"\b(pdf|link)\b", re.I)
+CAMPAIGN = re.compile(r"comment\s*[\"'“”‘’]?\s*(pdf|link)", re.I)
 COMMENT_WINDOW = timedelta(days=7)      # Meta: private reply within 7 days
 MSG_WINDOW = timedelta(hours=24)        # Meta: standard messaging window
 MAX_REMINDERS = 2
