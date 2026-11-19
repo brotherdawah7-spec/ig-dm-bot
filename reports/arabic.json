@@ -1,5 +1,77 @@
 {
- "checked_at": "2026-11-19T13:53:37.134445+00:00",
- "arabic_comments": 0,
- "details": []
+ "checked_at": "2026-11-19T13:54:31.105804+00:00",
+ "reels": [
+  {
+   "link": "https://www.instagram.com/reel/Df68y3SDPJp/",
+   "posted": "2026-11-19T11:16:02+0000",
+   "type": "REELS",
+   "instagram_count": 0,
+   "readable": 0,
+   "arabic_like": [],
+   "strict_match": 0
+  },
+  {
+   "link": "https://www.instagram.com/reel/Df68quFFIXX/",
+   "posted": "2026-11-19T11:14:54+0000",
+   "type": "REELS",
+   "instagram_count": 0,
+   "readable": 0,
+   "arabic_like": [],
+   "strict_match": 0
+  },
+  {
+   "link": "https://www.instagram.com/reel/Df68eysCt3_/",
+   "posted": "2026-11-19T11:13:17+0000",
+   "type": "REELS",
+   "instagram_count": 1,
+   "readable": 0,
+   "arabic_like": [],
+   "strict_match": 0
+  },
+  {
+   "link": "https://www.instagram.com/reel/Df68XkODONB/",
+   "posted": "2026-11-19T11:12:11+0000",
+   "type": "REELS",
+   "instagram_count": 0,
+   "readable": 0,
+   "arabic_like": [],
+   "strict_match": 0
+  },
+  {
+   "link": "https://www.instagram.com/reel/Df68KZ7Af4p/",
+   "posted": "2026-11-19T11:10:32+0000",
+   "type": "REELS",
+   "instagram_count": 4,
+   "readable": 0,
+   "arabic_like": [],
+   "strict_match": 0
+  },
+  {
+   "link": "https://www.instagram.com/reel/Df4LBIhkZmH/",
+   "posted": "2026-11-18T09:22:07+0000",
+   "type": "REELS",
+   "instagram_count": 59,
+   "readable": 0,
+   "arabic_like": [],
+   "strict_match": 0
+  },
+  {
+   "link": "https://www.instagram.com/reel/Df3loDtD2ZF/",
+   "posted": "2026-11-18T03:56:21+0000",
+   "type": "REELS",
+   "instagram_count": 0,
+   "readable": 0,
+   "arabic_like": [],
+   "strict_match": 0
+  },
+  {
+   "link": "https://www.instagram.com/reel/Df2Tn_rDIt9/",
+   "posted": "2026-11-17T15:59:50+0000",
+   "type": "REELS",
+   "instagram_count": 1,
+   "readable": 0,
+   "arabic_like": [],
+   "strict_match": 0
+  }
+ ]
 }
