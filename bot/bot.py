@@ -38,6 +38,14 @@ TOKEN_FILE = STATE / "token.enc"
 GRAPH = "https://graph.instagram.com/v26.0"
 
 KEYWORD = re.compile(r"\b(pdf|link)\b", re.I)
+# Anyone commenting "arabic" (or arbi / عربي) on ANY recent reel gets the Arabic roadmap PDF.
+ARABIC = re.compile(r"(?<!\w)(arabic|arbi|عربي|عربی)(?!\w)", re.I)
+ARABIC_BOOK = {
+    "title": "Arabic Roadmap: Free Course A to Z",
+    "publisher": "@brother.dawah, free PDF",
+    "url": "https://github.com/brotherdawah7-spec/ig-dm-bot/blob/main/files/arabic-roadmap.pdf",
+}
+ARABIC_LOOKBACK = timedelta(days=14)
 CAMPAIGN = re.compile(r"comment\s*[\"'“”‘’]?\s*(pdf|link)", re.I)
 COMMENT_WINDOW = timedelta(days=7)      # Meta: private reply within 7 days
 MSG_WINDOW = timedelta(hours=24)        # Meta: standard messaging window
@@ -188,8 +196,21 @@ def first_name(u: dict) -> str:
     return (u.get("username") or "").split(".")[0][:20] or "bhai"
 
 
+def watched_media(tok: str) -> list[tuple[dict, dict | None]]:
+    """PDF/LINK campaign reels (last 30 days) plus every reel from the last 14 days (for "arabic")."""
+    out = []
+    for m in paged("me/media", tok, fields="id,caption,timestamp,media_product_type", limit=50):
+        age = now() - ts(m["timestamp"])
+        if age > MEDIA_LOOKBACK:
+            break
+        b = book_for(m.get("caption", ""))
+        if b or age <= ARABIC_LOOKBACK:
+            out.append((m, b))
+    return out
+
+
 def handle_new_comments(tok: str, me: str, st: dict, budget: list[int]) -> None:
-    for media, book in campaigns(tok):
+    for media, campaign_book in watched_media(tok):
         comments = list(paged(f"{media['id']}/comments", tok, fields="id,text,timestamp,from,username", limit=50))
         new = [c for c in comments if c["id"] not in st["comments"]]
         if new:
@@ -198,8 +219,12 @@ def handle_new_comments(tok: str, me: str, st: dict, budget: list[int]) -> None:
             if budget[0] <= 0:
                 return
             cid = c["id"]
-            if cid in st["comments"]:
+            text = c.get("text", "")
+            arabic = bool(ARABIC.search(text))
+            seen = st["comments"].get(cid)
+            if seen and not (arabic and seen.get("skip") == "no keyword"):
                 continue
+            book = ARABIC_BOOK if arabic else campaign_book
             frm = c.get("from") or {}
             if frm.get("id") == me or c.get("username") == st.get("me_username"):
                 st["comments"][cid] = {"skip": "own"}
@@ -207,8 +232,9 @@ def handle_new_comments(tok: str, me: str, st: dict, budget: list[int]) -> None:
             if now() - ts(c["timestamp"]) > COMMENT_WINDOW:
                 st["comments"][cid] = {"skip": "too old"}
                 continue
-            if not KEYWORD.search(c.get("text", "")):
-                st["comments"][cid] = {"skip": "no keyword"}
+            if not arabic and not (campaign_book and KEYWORD.search(text)):
+                if campaign_book:
+                    st["comments"][cid] = {"skip": "no keyword"}
                 continue
             uid = frm.get("id")
             user = st["users"].get(uid) if uid else None
@@ -273,7 +299,9 @@ def handle_replies(tok: str, me: str, st: dict, budget: list[int]) -> None:
         if now() - ts(m["created_time"]) > MSG_WINDOW:
             continue
         u["last_seen_msg"] = m["id"]
-        book = next(b for b in BOOKS if b["title"] == u["book"])
+        book = next((b for b in [ARABIC_BOOK, *BOOKS] if b["title"] == u["book"]), None)
+        if not book:
+            continue
         try:
             prof = api("GET", uid, tok, fields="username,is_user_follow_business")
         except ApiError as e:
